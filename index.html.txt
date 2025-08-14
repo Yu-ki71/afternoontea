@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Afternoon Tea Salon | 東京アフタヌーンティー</title>
   <meta name="description" content="東京の若い世代に向けた、かわいいのに上質。季節のフルーツを楽しめるアフタヌーンティーの紹介・予約サイト（デモ）。">
-  <style>
+ <!-- Googleや検索エンジンにインデックスさせない設定 -->
+  <meta name="robots" content="noindex, nofollow">
+  <style>  
     /* ---------- Theme ---------- */
     :root{
       --pink-50:#fff5f8; --pink-100:#ffe6ee; --pink-200:#ffcfe0; --pink-300:#ffb1cd; --pink-400:#ff8fb6; --pink-500:#ff6aa1; --pink-600:#e2548d;
