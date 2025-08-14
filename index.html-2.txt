@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Afternoon Tea Salon | 東京アフタヌーンティー</title>
+  <meta name="description" content="東京の若い世代に向けた、かわいいのに上質。季節のフルーツを楽しめるアフタヌーンティーの紹介・予約サイト（デモ）。">
+  <style>
+    /* ---------- Theme ---------- */
+    :root{
+      --pink-50:#fff5f8; --pink-100:#ffe6ee; --pink-200:#ffcfe0; --pink-300:#ffb1cd; --pink-400:#ff8fb6; --pink-500:#ff6aa1; --pink-600:#e2548d;
+      --rose:#e86a92; --rose-deep:#c94f77; --gold:#b99b6b; --gold-soft:#e8dcc8; --ink:#2b2432; --ink-60:#2b243299; --ink-40:#2b243266; --bg:#fff9fb;
+      --shadow: 0 10px 25px rgba(203, 127, 168, .18);
+      --radius-xl: 1.25rem; --radius-2xl:2rem;
+    }
+    html,body{margin:0; font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif; color:var(--ink); background:var(--bg);}
+    img{max-width:100%; display:block;}
+    a{color:var(--rose-deep); text-decoration:none}
+    /* ---------- Layout ---------- */
+    .container{width:min(1100px, 92%); margin-inline:auto}
+    .grid{display:grid; gap:1.25rem}
+    .btn{display:inline-flex; align-items:center; gap:.5rem; padding:.9rem 1.15rem; border-radius:999px; border:1px solid transparent; cursor:pointer; font-weight:600; transition:.2s ease;}
+    .btn-primary{background:linear-gradient(135deg, var(--pink-400), var(--pink-600)); color:white; box-shadow:var(--shadow)}
+    .btn-primary:hover{filter:brightness(1.05)}
+    .btn-outline{background:white; color:var(--rose-deep); border-color:var(--pink-300)}
+    .tag{display:inline-block; padding:.25rem .6rem; font-size:.8rem; border-radius:999px; background:var(--gold-soft); color:var(--gold); border:1px solid #e9e0cf}
+    .card{background:white; border:1px solid #f1dce6; border-radius:var(--radius-xl); box-shadow:var(--shadow); overflow:hidden}
+    .section{padding-block: 64px}
+    h1,h2{font-weight:800; letter-spacing:.02em}
+    h2{font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.2rem)}
+    .muted{color:var(--ink-60)}
+
+    /* ---------- Floral Background Motif ---------- */
+    .hero{
+      position:relative; background: radial-gradient(1300px 600px at 70% -10%, var(--pink-100), transparent 60%), linear-gradient(0deg, #fff, var(--pink-50));
+      overflow:hidden;
+    }
+    .hero::after{
+      content:""; position:absolute; inset:auto -10% -20% -10%; height:320px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="320" viewBox="0 0 1440 320"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="%23ffcfe0"/><stop offset="100%" stop-color="%23ff8fb6"/></linearGradient></defs><path fill="url(%23g)" fill-opacity=".35" d="M0,224L48,202.7C96,181,192,139,288,138.7C384,139,480,181,576,170.7C672,160,768,96,864,96C960,96,1056,160,1152,160C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/></svg>') no-repeat bottom/cover;
+      filter: blur(1px);
+    }
+
+    /* ---------- Header ---------- */
+    header{position:sticky; top:0; z-index:50; background: rgba(255,255,255,.75); backdrop-filter: blur(8px); border-bottom:1px solid #f4e2ea}
+    .nav{display:flex; align-items:center; justify-content:space-between; height:64px}
+    .brand{display:flex; gap:.6rem; align-items:center; font-weight:800}
+    .brand .logo{width:28px; height:28px}
+    nav ul{list-style:none; display:flex; gap:1rem; margin:0; padding:0}
+    nav a{padding:.5rem .75rem; border-radius:999px}
+    nav a:hover{background:var(--pink-100)}
+    .nav-toggle{display:none}
+
+    /* ---------- Hero ---------- */
+    .hero-inner{display:grid; grid-template-columns: 1.1fr .9fr; gap:2rem; align-items:center; padding-block: 56px}
+    .hero h1{font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem)}
+    .hero p{font-size:1.05rem}
+    .hero-visual{position:relative}
+    .hero-photo{border-radius: var(--radius-2xl); border: 8px solid white; box-shadow: var(--shadow)}
+    .ribbon{position:absolute; top:10px; right:-8px; background:linear-gradient(90deg, var(--gold), #d2b48c); color:white; padding:.45rem .7rem; border-radius:999px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow)}
+
+    /* ---------- Features ---------- */
+    .features{grid-template-columns: repeat(3, 1fr)}
+    .feature{padding:1.1rem}
+    .feature h3{margin:.35rem 0 .25rem}
+
+    /* ---------- Tabs (Seasons) ---------- */
+    .tabs{display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem}
+    .tab{border:1px solid #f0cfe0; background:white; color:var(--rose-deep); border-radius:999px; padding:.5rem .9rem; cursor:pointer;}
+    .tab[aria-selected="true"]{background:linear-gradient(135deg,var(--pink-200),var(--pink-400)); color:white;}
+    .course-grid{grid-template-columns: repeat(3, 1fr)}
+    .course-card{display:flex; flex-direction:column}
+    .course-card .body{padding:1rem}
+    .price{font-weight:800; color:var(--rose-deep); font-size:1.1rem}
+
+    /* ---------- Gallery ---------- */
+    .gallery{grid-template-columns: repeat(4, 1fr)}
+    .gallery img{aspect-ratio:1/1; object-fit:cover; border-radius:1rem}
+
+    /* ---------- Forms ---------- */
+    form{display:grid; gap:.75rem}
+    label{font-weight:700; font-size:.95rem}
+    input,select,textarea{padding:.75rem .9rem; border:1px solid #efd5e2; border-radius:.8rem; background:white}
+    input:focus,select:focus,textarea:focus{outline:2px solid var(--pink-300)}
+    .form-row{display:grid; gap:.75rem; grid-template-columns: repeat(2, 1fr)}
+    .note{font-size:.9rem; color:var(--ink-60)}
+    .toast{position:fixed; right:16px; bottom:16px; background:var(--ink); color:white; padding:.8rem 1rem; border-radius:.8rem; opacity:0; transform: translateY(10px); transition:.25s;}
+    .toast.show{opacity:1; transform:none}
+
+    /* ---------- FAQ ---------- */
+    .faq-item{border-bottom:1px dashed #efcfe0; padding-block:.8rem}
+    .faq-q{display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-weight:700}
+    .faq-a{display:none; padding:.4rem 0 .8rem; color:var(--ink-60)}
+
+    /* ---------- Footer ---------- */
+    footer{padding:40px 0; background:white; border-top:1px solid #f4e2ea; color:var(--ink-60)}
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 960px){
+      .hero-inner{grid-template-columns: 1fr}
+      .features{grid-template-columns: 1fr 1fr}
+      .course-grid{grid-template-columns: 1fr 1fr}
+      .gallery{grid-template-columns: 1fr 1fr}
+    }
+    @media (max-width: 720px){
+      nav ul{display:none}
+      .nav-toggle{display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .7rem; border-radius:999px; border:1px solid #f1d5e3; background:white}
+      .mobile-menu{position:absolute; top:62px; right:0; left:0; background:white; border-bottom:1px solid #f3dbe6; display:none}
+      .mobile-menu.open{display:block}
+      .mobile-menu ul{display:grid; gap:.2rem; padding:12px 16px; list-style:none; margin:0}
+      .features{grid-template-columns: 1fr}
+      .course-grid{grid-template-columns: 1fr}
+      .form-row{grid-template-columns: 1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#ffb1cd"/><path d="M12 5c3.5 2.5 5 4.5 5 6.5S15.5 15 12 15 7 13.5 7 11.5 8.5 7.5 12 5Z" fill="#fff"/></svg>
+        <span>Afternoon Tea Salon</span>
+      </div>
+      <nav>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="menu">メニュー</button>
+        <ul id="menu">
+          <li><a href="#home">ホーム</a></li>
+          <li><a href="#courses">コース</a></li>
+          <li><a href="#menu-pricing">メニュー/料金</a></li>
+          <li><a href="#reserve">ネット予約</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#access">アクセス</a></li>
+          <li><a href="#contact">お問い合わせ</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul>
+        <li><a href="#home">ホーム</a></li>
+        <li><a href="#courses">コース</a></li>
+        <li><a href="#menu-pricing">メニュー/料金</a></li>
+        <li><a href="#reserve">ネット予約</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#access">アクセス</a></li>
+        <li><a href="#contact">お問い合わせ</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero section" id="home">
+    <div class="container hero-inner">
+      <div>
+        <span class="tag">東京・表参道</span>
+        <h1>かわいいのに上質。<br>季節のアフタヌーンティー</h1>
+        <p class="muted">10代後半〜30代の方に人気の、旬のフルーツとフローラルな演出が楽しめるティーセット。<br>記念日、推し活、女子会、デートに。</p>
+        <div style="display:flex; gap:.75rem; margin-top:1rem">
+          <a class="btn btn-primary" href="#reserve">今すぐ予約</a>
+          <a class="btn btn-outline" href="#courses">コースを見る</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img class="hero-photo" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1400&auto=format&fit=crop" alt="スタンドに盛り付けられたアフタヌーンティーの写真">
+        <div class="ribbon">季節限定・桃フェア</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <div class="container grid features">
+      <div class="card feature">
+        <span class="tag">こだわり</span>
+        <h3>旬のフルーツ</h3>
+        <p class="muted">春はいちご、夏は桃、秋はシャインマスカット、冬はショコラ×ベリーなど、季節替わり。</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">お茶</span>
+        <h3>ティーセレクション</h3>
+        <p class="muted">ダージリン/アールグレイ/ジャスミン/ノンカフェインなど約12種のフリーフロー。</p>
+      </div>
+      <div class="card feature">
+        <span class="tag">空間</span>
+        <h3>花とピンクの世界</h3>
+        <p class="muted">高級感のある大理石×ゴールドに、可憐なフラワーデコレーションで写真映え。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Courses (Season Tabs) -->
+  <section class="section" id="courses">
+    <div class="container">
+      <h2>季節のコース</h2>
+      <div class="tabs" role="tablist" aria-label="季節のコース">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="spring" id="tab-spring">春</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="summer" id="tab-summer">夏</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="autumn" id="tab-autumn">秋</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="winter" id="tab-winter">冬</button>
+      </div>
+
+      <div id="spring" class="grid course-grid" role="tabpanel" aria-labelledby="tab-spring">
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="いちごのスイーツ">
+          <div class="body">
+            <h3>ストロベリーブロッサム</h3>
+            <p class="muted">いちご×ローズの華やかなアレンジ。スコーン/サンド/プチガトー付き。</p>
+            <div class="price">¥4,800</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1514517220034-e2f2d2f6b4b3?q=80&w=1200&auto=format&fit=crop" alt="桜モチーフのスイーツ">
+          <div class="body">
+            <h3>サクラ・セレニティ</h3>
+            <p class="muted">桜の香りをまとった和洋折衷のセイボリーとデザート。</p>
+            <div class="price">¥5,500</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?q=80&w=1200&auto=format&fit=crop" alt="抹茶スイーツ">
+          <div class="body">
+            <h3>抹茶クラシック</h3>
+            <p class="muted">宇治抹茶×ホワイトチョコ。香り高いマリアージュ。</p>
+            <div class="price">¥5,200</div>
+          </div>
+        </article>
+      </div>
+
+      <div id="summer" class="grid course-grid" role="tabpanel" aria-labelledby="tab-summer" hidden>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1200&auto=format&fit=crop" alt="桃スイーツ">
+          <div class="body">
+            <h3>ピーチジュエル</h3>
+            <p class="muted">白桃づくしの爽やかアレンジ。ローズマリーの香り。</p>
+            <div class="price">¥5,800</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1604908554007-8f5873c3deec?q=80&w=1200&auto=format&fit=crop" alt="トロピカルスイーツ">
+          <div class="body">
+            <h3>トロピカル・リュクス</h3>
+            <p class="muted">マンゴー/パイン/ココナッツ。夏休みのご褒美に。</p>
+            <div class="price">¥6,200</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?q=80&w=1200&auto=format&fit=crop" alt="ハーブとレモンのスイーツ">
+          <div class="body">
+            <h3>レモン&ハーブ</h3>
+            <p class="muted">レモンカード×バジル。軽やかでキレのある味わい。</p>
+            <div class="price">¥4,900</div>
+          </div>
+        </article>
+      </div>
+
+      <div id="autumn" class="grid course-grid" role="tabpanel" aria-labelledby="tab-autumn" hidden>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1200&auto=format&fit=crop" alt="シャインマスカットのスイーツ">
+          <div class="body">
+            <h3>シャイン・グリーン</h3>
+            <p class="muted">シャインマスカット×マスカルポーネ。香りの余韻。</p>
+            <div class="price">¥5,900</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1464306076886-da185f6a9d13?q=80&w=1200&auto=format&fit=crop" alt="モンブラン">
+          <div class="body">
+            <h3>和栗モンブラン</h3>
+            <p class="muted">濃密な栗クリームとラムの香り。大人の時間に。</p>
+            <div class="price">¥6,500</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=1200&auto=format&fit=crop" alt="梨のスイーツ">
+          <div class="body">
+            <h3>ラ・ポワール</h3>
+            <p class="muted">洋梨×キャラメルの香ばしさ。香り高いアールグレイと。</p>
+            <div class="price">¥5,400</div>
+          </div>
+        </article>
+      </div>
+
+      <div id="winter" class="grid course-grid" role="tabpanel" aria-labelledby="tab-winter" hidden>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1517683551739-7f3f08efbaed?q=80&w=1200&auto=format&fit=crop" alt="ショコラのデザート">
+          <div class="body">
+            <h3>ショコラ・ベリー</h3>
+            <p class="muted">カカオ×ベリーの王道ペアリング。濃厚リッチ。</p>
+            <div class="price">¥6,000</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1200&auto=format&fit=crop" alt="柑橘スイーツ">
+          <div class="body">
+            <h3>柑橘シトラス</h3>
+            <p class="muted">オレンジ/柚子/グレープフルーツ。冬にうれしい爽やかさ。</p>
+            <div class="price">¥4,900</div>
+          </div>
+        </article>
+        <article class="card course-card">
+          <img src="https://images.unsplash.com/photo-1519868326380-4b4f0b2c2dc8?q=80&w=1200&auto=format&fit=crop" alt="苺のスイーツ">
+          <div class="body">
+            <h3>苺のホワイトノエル</h3>
+            <p class="muted">ホワイトチョコ×いちご。雪のような口どけ。</p>
+            <div class="price">¥6,300</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu & Pricing -->
+  <section class="section" id="menu-pricing">
+    <div class="container">
+      <h2>メニュー / 料金</h2>
+      <div class="grid" style="grid-template-columns: 1.2fr .8fr; align-items:start">
+        <div class="card" style="padding:1rem 1.2rem">
+          <ul>
+            <li><strong>ティーセット（2名様分）</strong>：サンド/スコーン/プティフール <span class="price">¥8,800〜</span></li>
+            <li><strong>ドリンクフリーフロー</strong>（90分）：ティー12種/コーヒー/ソフトドリンク <span class="price">+¥800</span></li>
+            <li><strong>記念日オプション</strong>：メッセージプレート/ミニブーケ <span class="price">+¥1,500</span></li>
+          </ul>
+          <p class="note">※料金は税込表記。季節により内容が変わります。</p>
+        </div>
+        <div class="card" style="padding:1rem 1.2rem">
+          <h3>写真ギャラリー</h3>
+          <div class="grid gallery" style="margin-top:.6rem">
+            <img src="https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?q=80&w=1000&auto=format&fit=crop" alt="アフタヌーンティー写真1">
+            <img src="https://images.unsplash.com/photo-1534241446058-5f85f2323d61?q=80&w=1000&auto=format&fit=crop" alt="アフタヌーンティー写真2">
+            <img src="https://images.unsplash.com/photo-1464306076886-da185f6a9d13?q=80&w=1000&auto=format&fit=crop" alt="アフタヌーンティー写真3">
+            <img src="https://images.unsplash.com/photo-1453831210728-695502f9f795?q=80&w=1000&auto=format&fit=crop" alt="アフタヌーンティー写真4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reservation -->
+  <section class="section" id="reserve">
+    <div class="container">
+      <h2>ネット予約</h2>
+      <div class="grid" style="grid-template-columns: 1fr 1fr">
+        <form class="card" id="reserveForm" style="padding:1rem 1.2rem">
+          <div class="form-row">
+            <div>
+              <label for="date">日付</label>
+              <input type="date" id="date" required />
+            </div>
+            <div>
+              <label for="time">時間</label>
+              <select id="time" required>
+                <option value="">選択してください</option>
+                <option>11:00</option>
+                <option>13:30</option>
+                <option>16:00</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label for="people">人数</label>
+              <select id="people" required>
+                <option value="">選択</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+              </select>
+            </div>
+            <div>
+              <label for="course">コース</label>
+              <select id="course" required>
+                <option value="">選択</option>
+                <option>ストロベリーブロッサム</option>
+                <option>ピーチジュエル</option>
+                <option>シャイン・グリーン</option>
+                <option>ショコラ・ベリー</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="name">お名前</label>
+            <input id="name" placeholder="例）中川 友紀菜" required />
+          </div>
+          <div>
+            <label for="tel">電話番号</label>
+            <input id="tel" type="tel" placeholder="090-xxxx-xxxx" required pattern="[0-9\-]+" />
+          </div>
+          <div>
+            <label for="request">ご要望（任意）</label>
+            <textarea id="request" rows="4" placeholder="アレルギー、記念日メッセージなど"></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">予約リクエストを送信</button>
+          <p class="note">※デモのため本送信は行われません。</p>
+        </form>
+
+        <div class="card" style="padding:1rem 1.2rem">
+          <h3>ご利用案内</h3>
+          <ul>
+            <li>お席90分制となります。</li>
+            <li>前日までのご予約をおすすめしています。</li>
+            <li>アレルギー対応は事前にお知らせください。</li>
+            <li>キャンセルは前日18:00まで（以降は50%）。</li>
+          </ul>
+          <h3 style="margin-top:1rem">営業時間</h3>
+          <p>平日 11:00-18:00 / 土日祝 10:00-19:00（不定休）</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <h2>よくあるご質問</h2>
+      <div class="faq-item">
+        <div class="faq-q">ドレスコードはありますか？ <span>＋</span></div>
+        <div class="faq-a">スマートカジュアルを推奨しています。過度な香水はご遠慮ください。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">記念日メッセージは入れられますか？ <span>＋</span></div>
+        <div class="faq-a">可能です。ご予約時の「ご要望」にメッセージをご記入ください（英字推奨）。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">テイクアウトはできますか？ <span>＋</span></div>
+        <div class="faq-a">一部スイーツはテイクアウト対応です。スタッフにお尋ねください。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Access -->
+  <section class="section" id="access">
+    <div class="container">
+      <h2>アクセス</h2>
+      <div class="grid" style="grid-template-columns: 1.1fr .9fr; align-items:start">
+        <div class="card" style="overflow:hidden">
+          <iframe title="map" width="100%" height="360" style="border:0" loading="lazy" allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.44147798733!2d139.70644!3d35.664597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188ca7b9f4d8ef%3A0x61ad28a6abf3f2ed!2z5p2-5bGx5rWc55yM56We5aWI5bed5Yy65p2x5Yy65Y2X5Lya!5e0!3m2!1sja!2sjp!4v1680000000000"></iframe>
+        </div>
+        <div>
+          <div class="card" style="padding:1rem 1.2rem">
+            <p><strong>住所：</strong>東京都渋谷区神宮前 〇-〇-〇（表参道駅 徒歩5分）</p>
+            <p><strong>電話：</strong>03-1234-5678</p>
+            <p><strong>メール：</strong>info@example.com</p>
+            <a class="btn btn-outline" href="#reserve">予約する</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container">
+      <h2>お問い合わせ</h2>
+      <form class="card" id="contactForm" style="padding:1rem 1.2rem; max-width:720px">
+        <div class="form-row">
+          <div>
+            <label for="cname">お名前</label>
+            <input id="cname" required />
+          </div>
+          <div>
+            <label for="cemail">メール</label>
+            <input id="cemail" type="email" placeholder="name@example.com" required />
+          </div>
+        </div>
+        <div>
+          <label for="cmsg">内容</label>
+          <textarea id="cmsg" rows="5" required></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">送信</button>
+        <p class="note">※デモのため本送信は行われません。</p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap">
+      <small>© <span id="year"></span> Afternoon Tea Salon</small>
+      <div style="display:flex; gap:.5rem">
+        <a href="#home">トップへ戻る</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">送信しました（デモ）</div>
+
+  <script>
+    // Mobile menu toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    toggle?.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const href=a.getAttribute('href');
+        if(href && href.length>1){
+          e.preventDefault();
+          document.querySelector(href)?.scrollIntoView({behavior:'smooth'});
+          mobileMenu.classList.remove('open');
+        }
+      })
+    })
+
+    // Tabs interaction
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab=>{
+      tab.addEventListener('click',()=>{
+        tabs.forEach(t=>t.setAttribute('aria-selected','false'));
+        tab.setAttribute('aria-selected','true');
+        document.querySelectorAll('[role="tabpanel"]').forEach(p=>p.hidden=true);
+        document.getElementById(tab.getAttribute('aria-controls')).hidden=false;
+      })
+    })
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-item').forEach(item=>{
+      const q=item.querySelector('.faq-q');
+      const a=item.querySelector('.faq-a');
+      q.addEventListener('click',()=>{
+        const open=a.style.display==='block';
+        a.style.display=open?'none':'block';
+        q.querySelector('span').textContent=open?'＋':'−';
+      })
+    })
+
+    // Forms (demo only)
+    const toast = document.getElementById('toast');
+    function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2000) }
+
+    // Set min date (Tokyo timezone consideration by using local date)
+    const dateInput = document.getElementById('date');
+    if(dateInput){
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth()+1).padStart(2,'0');
+      const dd = String(today.getDate()).padStart(2,'0');
+      dateInput.min = `${yyyy}-${mm}-${dd}`;
+    }
+
+    document.getElementById('reserveForm')?.addEventListener('submit', e=>{
+      e.preventDefault();
+      // simple validation example
+      const requiredIds=['date','time','people','course','name','tel'];
+      const missing = requiredIds.filter(id=>!document.getElementById(id).value);
+      if(missing.length){ showToast('未入力の項目があります'); return; }
+      showToast('予約リクエストを受け付けました（デモ）');
+      e.target.reset();
+    })
+
+    document.getElementById('contactForm')?.addEventListener('submit', e=>{
+      e.preventDefault();
+      showToast('お問い合わせを送信しました（デモ）');
+      e.target.reset();
+    })
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
